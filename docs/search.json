@@ -1,0 +1,22 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Samuel’s live apps",
+    "section": "",
+    "text": "1 Testüberschrift\nasdfaf asdf",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Testüberschrift</span>"
+    ]
+  },
+  {
+    "objectID": "r-shinylive.html",
+    "href": "r-shinylive.html",
+    "title": "2  Test",
+    "section": "",
+    "text": "This document contains just the Shiny App source code used in Joe Cheng’s posit::conf(2023) demo (Warning: Large file size, don’t open on mobile!)\nFor a detailed breakdown, please see the index.qmd file.\n#| standalone: true\n#| viewerHeight: 900\n#| viewerWidth: 1800\n# UI\nui &lt;- fluidPage(\n  sidebarLayout(\n    sidebarPanel(\n      sliderInput(\"n\", \"Gruppengröße\", min = 0, max = 100, value = 20),\n      sliderInput(\"d\", \"Cohen's d\", min = 0, max = 3, value = 0.4, step = 0.1),\n      verbatimTextOutput(\"pvaluetxt\")\n    ),\n    mainPanel(\n      plotOutput(\"histogram1\"),\n      plotOutput(\"histogram2\")\n    )\n  )\n)\n\n# Server\nserver &lt;- function(input, output, session) {\n  \n  output$histogram1 &lt;- renderPlot({\n    set.seed(2345)\n    num_samples &lt;- input$n\n    \n    var1 &lt;- rnorm(num_samples, mean = 0, sd = 1)\n    var2 &lt;- rnorm(num_samples, mean = input$d, sd = 1)\n    \n    df &lt;- data.frame(Gruppe1 = var1, Gruppe2 = var2)\n    # Pivoting the dataset from wide to long format\n    df_long &lt;- reshape(\n      data = df,\n      varying = list(names(df)[1:2]),  # Columns to be melted\n      v.names = \"Value\",                      # Name of the variable column in the long format\n      timevar = \"Variable\",                   # Name of the column containing variable names\n      times = c(\"Gruppe 1\", \"Gruppe 2\"),      # New variable names in long format\n      direction = \"long\"                      # Pivoting from wide to long\n    )\n    \n    stripchart(Value ~ Variable, data = df_long,\n               pch = 19, frame = FALSE, \n               vertical = FALSE,\n               method = \"jitter\")\n  })\n  \n  output$pvaluetxt &lt;- renderText({\n    set.seed(2345)\n    num_samples &lt;- input$n\n    \n    var1 &lt;- rnorm(num_samples, mean = 0, sd = 1)\n    var2 &lt;- rnorm(num_samples, mean = input$d, sd = 1)\n    \n    t_test &lt;- t.test(var1, var2)\n    paste(\"p-Wert:\", round(t_test$p.value, digits = 3))\n  })\n}\n\nshinyApp(ui = ui, server = server)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Test</span>"
+    ]
+  }
+]

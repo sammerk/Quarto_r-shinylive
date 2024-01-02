@@ -1,0 +1,19 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Samuel's live apps"
+  author: "Samuel Merk"
+  chapters:
+    - index.qmd
+    - r-shinylive.qmd
+    - r-shinylive.qmd
+
+
+format:
+  html:
+    theme: cosmo
+
+filters:
+  - shinylive
